@@ -1,4 +1,6 @@
 
+load 'test_runner.rb'
+
 CONFIG = {
     :test_dir               => "test",
     :source_dir             => "src",
@@ -25,8 +27,6 @@ BIN_DIR = "#{CONFIG[:build_dir]}/bin"
 
 # This is where the test runners go.
 RUNNER_DIR = "#{CONFIG[:build_dir]}/runners"
-
-namespace :test do
 
 # For a given source file, get the corresponding object file (including the path).
 def source_file_to_object_file source_file
@@ -57,16 +57,6 @@ def get_build_file_list_from_test test_source_file
     build_file_list = "#{CONFIG[:source_dir]}/#{get_test_name_from_full_path(test_source_file)}.c"
     build_file_list = source_file_to_object_file(build_file_list)
     FileList[build_file_list]
-end
-
-# Create a test runner file from a test source file.
-def create_test_runner (test_file, test_runner_file)
-    puts "Generating runner for #{test_file}..."
-    puts "  in #{test_runner_file}"
-    # TODO: Actually create a test runner.
-    mkdir_p test_runner_file.pathmap("%d")
-    touch test_runner_file
-    sh "gcc -c #{test_runner_file} -o #{test_runner_file.ext(".o")}"
 end
 
 # Create a file task for generating an object file from a source file.
@@ -127,11 +117,13 @@ def create_test_runner_task test_file
     end
 end
 
-# Create a task for running each test.
-TEST_FILES.each do |file|
-    create_test_task file
-    create_test_runner_task file
-end
+namespace :test do
+
+    # Create a task for running each test.
+    TEST_FILES.each do |file|
+        create_test_task file
+        create_test_runner_task file
+    end
 
 end # namespace :test
 

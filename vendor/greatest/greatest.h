@@ -296,7 +296,7 @@ void greatest_set_flag(greatest_flag_t flag);
 
 /* Start defining a test function.
  * The arguments are not included, to allow parametric testing. */
-#define GREATEST_TEST static greatest_test_res
+#define GREATEST_TEST greatest_test_res
 
 /* PASS/FAIL/SKIP result from a test. Used internally. */
 typedef enum {
